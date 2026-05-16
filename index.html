@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FF Bio Gallery</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0f172a;
+  color:white;
+}
+
+header{
+  text-align:center;
+  padding:20px;
+  font-size:22px;
+  color:#00e5ff;
+  font-weight:bold;
+}
+
+.container{
+  max-width:800px;
+  margin:auto;
+  padding:10px;
+}
+
+.card{
+  background:#111827;
+  border:1px solid #1f2937;
+  padding:10px;
+  margin:10px 0;
+  border-radius:12px;
+  position:relative;
+  text-align:center;
+}
+
+img{
+  width:100%;
+  border-radius:10px;
+}
+
+.copy-btn{
+  position:absolute;
+  right:10px;
+  top:10px;
+  background:#00e5ff;
+  border:none;
+  padding:6px 10px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:12px;
+}
+
+.load{
+  width:100%;
+  padding:10px;
+  margin:20px 0;
+  background:#2563eb;
+  border:none;
+  color:white;
+  border-radius:8px;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>🔥 FF Bio Gallery</header>
+
+<div class="container">
+
+<div id="list"></div>
+
+<button class="load" onclick="loadMore()">Load More</button>
+
+</div>
+
+<script>
+
+let data = [];
+let shown = 0;
+
+/* =========================
+   🎨 IMAGE + HIDDEN CODE
+   ========================= */
+const templates = [
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_182307.jpg",
+  code: `[b][6D7B8B]ᝰ[FFFFFF]▄▄▄▄▄▄[FFA000]▄▄▄
+GOLD FLAKE`
+},
+
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_181825.jpg",
+  code: `[b][c][FF0000] ┌─☆┐
+┌┘▣▣└┐
+└◎──◎┘✿COME BABY✿`
+},
+
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_192428.jpg",
+  code: `[b][c][FF0000] ✿
+[00FF00] ᭄⸙ [FF9933]ﻞﮔ ﺪﺣﺎﻟﺍ`
+},
+
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_182107.jpg",
+  code: `[B][C]╱◥██████◣
+[FFD319]│∩│▤│▤│▤
+▓▓▓▓▓▓▓▓▓ Peak`
+},
+
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_182219.jpg",
+  code: `[B][C][CCFF00]♡┏┯┓
+┏┛□┗━━━┓ ♡-TRUCK
+┗⊙━━━⊙━┛`,
+},
+
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_192508.jpg",
+  code: `[FFB900][b]    ✿     ♬     ☯︎ 
+    GULL KHAN  PRO`,
+},
+
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_181019.jpg",
+  code: `[b][c][FF0000]✿
+[00FF00]᭄⸙  I ❤️ I LOVE YOU 2`,
+},
+
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_180854.jpg",
+  code: `[b][c][FFFFFF]ME ဗီူ╯[FF0200]❤[00FF00]╰ဗီူME & YOU`,
+},
+
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_182147.jpg",
+  code: `[FF0000]  ✿*●❤️●    ❀✿❀
+[00FF00]༆࿔/▓\/▓\☆ \ Į /❤️`,
+},
+
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_180812.jpg",
+  code: `[b][c]ᴍყ Ꮋᴇꫝᴛ Ᏸᴇꫝᴛ
+[b][c][FF0000]❤ [00FFFF] T G`,
+},
+
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_180927.jpg",
+  code: `[b][c][FF00FF]┏╮\ /╱✿ ፝֟፝
+╰♡✿[00FFFF] PAGAL LOVE ❤️ LOVE`,
+},
+
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_192336.jpg",
+  code: `[b][c][FF9933]★ GAMER ★
+[00FF00] PRO PLAYER`,
+},
+
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_181900.jpg",
+  code: `[c][/b][FFC107]
+▙▂▂◢▓▓▓▓▓▓▓▙
+  ◥▙▛▀▀█ UMP LOVER ❤️`,
+},
+
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_192548.jpg",
+  code: `[c][/b][9C27B0] 
+◢▓▓▓▓▓▓▀▀
+█◤'╯ M1887 LOVER ❤️`,
+},
+
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_181106.jpg",
+  code: `[AA73FF]╰☆☆☆☆╮
+Gull khan Pro
+[FFBD59]╰☆☆☆☆╮`,
+},
+
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_181747.jpg",
+  code: `[FFA500]╔══VIP══╗
+   GULL KHAN PRO
+╚═════╝`,
+},
+
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_181630.jpg",
+  code: `[FF0000]╭─DANGER──╮
+│ Noob Hunter      │
+╰──────╯`,
+},
+
+{
+  img: "https://raw.githubusercontent.com/gullnoor596-svg/Symbol-pic/refs/heads/main/Symbol/20260515_180622.jpg",
+  code: `[B][00FFFF]╬═╬ ☺️/
+╬═╬ /▌PRO Player
+[00FF7F]╬═╬ /\ `,
+},
+
+{
+  img: "https://i.imgur.com/5.jpg",
+  code: ``,
+},
+
+{
+  img: "https://i.imgur.com/5.jpg",
+  code: ``,
+},
+
+{
+  img: "https://i.imgur.com/5.jpg",
+  code: ``,
+},
+
+{
+  img: "https://i.imgur.com/5.jpg",
+  code: ``,
+},
+
+{
+  img: "https://i.imgur.com/5.jpg",
+  code: ``,
+},
+
+{
+  img: "https://i.imgur.com/5.jpg",
+  code: ``,
+},
+
+{
+  img: "https://i.imgur.com/5.jpg",
+  code: ``,
+},
+
+];
+
+/* =========================
+   🔢 GENERATE 600 ITEMS
+   ========================= */
+for(let i=1;i<=18;i++){
+  let t = templates[i % templates.length];
+  data.push(t);
+}
+
+/* =========================
+   📦 RENDER FUNCTION
+   ========================= */
+function render(count){
+  let list = document.getElementById("list");
+
+  for(let i=shown;i<shown+count && i<data.length;i++){
+    let div = document.createElement("div");
+    div.className="card";
+
+    div.innerHTML=`
+      <button class="copy-btn" onclick="copyText(${i})">Copy</button>
+
+      <img src="${data[i].img}" onerror="this.style.display='none'">
+    `;
+
+    list.appendChild(div);
+  }
+
+  shown += count;
+}
+
+/* =========================
+   📥 LOAD MORE
+   ========================= */
+function loadMore(){
+  render(10);
+}
+
+/* =========================
+   📋 COPY HIDDEN CODE
+   ========================= */
+function copyText(i){
+  navigator.clipboard.writeText(data[i].code);
+  alert("Code Copied!");
+}
+
+/* first load */
+render(10);
+
+</script>
+
+</body>
+</html>
